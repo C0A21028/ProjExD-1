@@ -49,18 +49,22 @@ def kaito(k):
                 break
         if count==q:
             print("全問正解です。おめでとうございます")
+            return True
         break
 
 l=mondai(10)
+j=l
 k=kesson(l)
 h=hyouji(l,k)
 for i in range(5):
     print("対象文字")
-    print(l)
+    print(j)
     print("欠損文字")
     print(k)
     print("表示文字")
     print(h)
     kai=kaito(k)
+    if kai==True:
+        break
 
 
