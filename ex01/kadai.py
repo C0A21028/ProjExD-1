@@ -50,17 +50,17 @@ def kaito(k):
         if count==q:
             print("全問正解です。おめでとうございます")
         break
-    
 
 l=mondai(10)
-print("対象文字")
-print(l)
-print("欠損文字")
 k=kesson(l)
-print(k)
-print("表示文字")
 h=hyouji(l,k)
-print(h)
-kai=kaito(k)
+for i in range(5):
+    print("対象文字")
+    print(l)
+    print("欠損文字")
+    print(k)
+    print("表示文字")
+    print(h)
+    kai=kaito(k)
 
 
