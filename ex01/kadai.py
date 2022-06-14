@@ -1,4 +1,5 @@
 from random import randint
+import datetime
 def mondai(k):
     l=[]
     L=[]
@@ -52,7 +53,7 @@ def kaito(k):
             return True
         break
 
-
+st = datetime.datetime.now()
 for i in range(5):
     print("対象文字")
     l=mondai(10)
@@ -66,5 +67,6 @@ for i in range(5):
     kai=kaito(k)
     if kai==True:
         break
-
+ed = datetime.datetime.now()
+print(f"{(ed-st).seconds}かかりました")
 
