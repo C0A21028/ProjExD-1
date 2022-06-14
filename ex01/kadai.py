@@ -1,9 +1,11 @@
 from random import randint
 def mondai(k):
     l=[]
+    L=[]
     while len(l) < k:
         p=randint(65,90)
-        if not p in l:
+        if not p in L:
+            L.append(p)
             l.append(chr(p))
     return l
 def kesson(l):
@@ -12,7 +14,7 @@ def kesson(l):
     r=randint(2,5) #何個欠損させるか
     while len(k) < r:
         R=randint(0,L-1)
-        if not R in k:
+        if not l[R] in k:
             k.append(l[R])
     return k
 def hyouji(l,k):
@@ -53,8 +55,10 @@ def kaito(k):
 l=mondai(10)
 print("対象文字")
 print(l)
+print("欠損文字")
 k=kesson(l)
 print(k)
+print("表示文字")
 h=hyouji(l,k)
 print(h)
 kai=kaito(k)
