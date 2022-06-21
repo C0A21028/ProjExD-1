@@ -21,24 +21,60 @@ def button_click(event):
         entry.delete(0,tk.END)
     elif num=="×":
         num="*"
-        entry1.insert(tk.END,entry.get())
-        entry1.insert(tk.END,num)
-        entry.delete(0,tk.END)
+        k=entry1.get()
+        k=list(k)
+        m=entry.get()
+        if m=="" and (k[-1]=="+" or k[-1]=="-" or k[-1]=="*" or k[-1]=="/"):
+            k[-1]=num
+            km = "".join(k)
+            entry1.delete(0,tk.END)
+            entry1.insert(tk.END,km)
+        else:
+            entry1.insert(tk.END,entry.get())
+            entry1.insert(tk.END,num)
+            entry.delete(0,tk.END)
     elif num=="+":
         num="+"
-        entry1.insert(tk.END,entry.get())
-        entry1.insert(tk.END,num)
-        entry.delete(0,tk.END)
+        k=entry1.get()
+        k=list(k)
+        m=entry.get()
+        if m=="" and (k[-1]=="+" or k[-1]=="-" or k[-1]=="*" or k[-1]=="/"):
+            k[-1]=num
+            km = "".join(k)
+            entry1.delete(0,tk.END)
+            entry1.insert(tk.END,km)
+        else:
+            entry1.insert(tk.END,entry.get())
+            entry1.insert(tk.END,num)
+            entry.delete(0,tk.END)
     elif num=="-":
         num="-"
-        entry1.insert(tk.END,entry.get())
-        entry1.insert(tk.END,num)
-        entry.delete(0,tk.END)
+        k=entry1.get()
+        k=list(k)
+        m=entry.get()
+        if m=="" and (k[-1]=="+" or k[-1]=="-" or k[-1]=="*" or k[-1]=="/"):
+            k[-1]=num
+            km = "".join(k)
+            entry1.delete(0,tk.END)
+            entry1.insert(tk.END,km)
+        else:
+            entry1.insert(tk.END,entry.get())
+            entry1.insert(tk.END,num)
+            entry.delete(0,tk.END)
     elif num=="÷":
         num="/"
-        entry1.insert(tk.END,entry.get())
-        entry1.insert(tk.END,num)
-        entry.delete(0,tk.END)
+        k=entry1.get()
+        k=list(k)
+        m=entry.get()
+        if m=="" and (k[-1]=="+" or k[-1]=="-" or k[-1]=="*" or k[-1]=="/"):
+            k[-1]=num
+            km = "".join(k)
+            entry1.delete(0,tk.END)
+            entry1.insert(tk.END,km)
+        else:
+            entry1.insert(tk.END,entry.get())
+            entry1.insert(tk.END,num)
+            entry.delete(0,tk.END)
     else:
         entry.insert(tk.END,num)
 
@@ -55,7 +91,7 @@ if __name__ == "__main__":
     entry.grid(row=1,column=1,columnspan=10)
 
     
-    for l,i in enumerate(["C","上C","下C","√",9,8,7,"+",6,5,4,"-",3,2,1,"×","",0,"=","÷"]):
+    for l,i in enumerate(["C","上C","下C","",9,8,7,"+",6,5,4,"-",3,2,1,"×","",0,"=","÷"]):
         button=tk.Button(root,text=f"{i}",
                         font=("Helvetica",30),
                         width=4,height=1,
