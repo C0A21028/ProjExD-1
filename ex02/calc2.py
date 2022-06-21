@@ -55,7 +55,7 @@ if __name__ == "__main__":
     entry.grid(row=1,column=1,columnspan=10)
 
     
-    for l,i in enumerate(["C","上C","下C","",9,8,7,"+",6,5,4,"-",3,2,1,"×","",0,"=","÷"]):
+    for l,i in enumerate(["C","上C","下C","√",9,8,7,"+",6,5,4,"-",3,2,1,"×","",0,"=","÷"]):
         button=tk.Button(root,text=f"{i}",
                         font=("Helvetica",30),
                         width=4,height=1,
