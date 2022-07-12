@@ -36,9 +36,10 @@ def finished():
         maze_bg[py+1][px]=1
         maze_bg[py][px+1]=1
         maze_bg[py][px-1]=1
-        tori=tk.PhotoImage(file="ex03/fig/5.png")
-        img = tori.subsample(2)
-        canvas.create_image(mx,my,image=img,tag="tori")
+        tori2=tk.PhotoImage(file="ex03/fig/6.png")
+        img2= tori2.subsample(2)
+        imageItemID = canvas.create_image(200, 300, image=img2,tag="tori2")
+        canvas.itemconfigure(imageItemID, image=img2)
         if key=="x":
             sys.exit()
     

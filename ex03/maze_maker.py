@@ -43,8 +43,7 @@ def sarch(maze_bg,canvas):
             p=m
             px=j[0]
             py=j[1]
-    canvas.create_rectangle(px*50, py*50, px*50+50, py*50+50, 
-                                    fill="red")
+    canvas.create_rectangle(px*50, py*50, px*50+50, py*50+50, fill="red")
     return px,py
 
 def show_maze(canvas, maze_lst):
