@@ -66,11 +66,12 @@ class bomb:
 
     def update(self,scr:Screen):
         self.rct.move_ip(self.vx,self.vy)
-        scr.sfc.blit(self.sfc,self.rct)
+
         yoko,tate=check_bound(self.rct,scr.rct)
         self.vx*=yoko
         self.vy*=tate
-        self.blit(scr)
+        scr.sfc.blit(self.sfc,self.rct)
+
         
 
 
@@ -221,9 +222,13 @@ def main():
                 return
             for k in beams:
                 if k!=None and k.rct.colliderect(j.rct):
-                    return
+                    beams.remove(k)
+                    bmimg_sfc.remove(j)
+
         if len(beams)>=10:
             beams.pop(0)
+        if len(bmimg_sfc)<=0:
+            return
         pg.display.update()
         clock.tick(1000)
 
