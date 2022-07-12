@@ -219,6 +219,9 @@ def main():
         for j in bmimg_sfc:
             j.update(scr)
             if kkt.rct.colliderect(j.rct):
+                root = tk.Tk()
+                root.withdraw()
+                tkm.showinfo("ドンマイ","ゲームオーバー")
                 return
             for k in beams:
                 if k!=None and k.rct.colliderect(j.rct):
@@ -228,6 +231,9 @@ def main():
         if len(beams)>=10:
             beams.pop(0)
         if len(bmimg_sfc)<=0:
+            root = tk.Tk()
+            root.withdraw()
+            tkm.showinfo("おめでとう","ゲームクリア")
             return
         pg.display.update()
         clock.tick(1000)
