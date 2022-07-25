@@ -7,7 +7,10 @@ import tkinter as tk
 
 deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] * 4
 gara = ["CL","HT","SP","DI"]
-
+jisyo = {"CL":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+        "HT":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+        "SP":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+        "DI":[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}
 
 class Screen:
     def __init__(self,title,wh,image):
@@ -48,6 +51,23 @@ class huda:
         scr.sfc.blit(self.sfc2,self.rct2)
         self.blit(scr)
 
+
+class tuika:
+    def __init__(self,hand,label,x,count):
+        self.sfc=pg.image.load(f"./ex06/トランプ/{label[0]}/{hand[0]}_{label[0]}.png")
+        self.sfc=pg.transform.rotozoom(self.sfc, 0, 0.15)
+        self.rct=self.sfc.get_rect()
+        if count==1:
+            mod=x+160
+        else:
+            mod=x+75
+        self.rct.center=(mod,700)
+    def blit(self,scr:Screen):
+        scr.sfc.blit(scr.sfc,scr.rct)
+    def update(self,scr:Screen):
+        scr.sfc.blit(self.sfc,self.rct)
+        self.blit(scr)
+
 class ura:
     def __init__(self,image):
         self.sfc=pg.image.load(image)
@@ -58,20 +78,25 @@ class ura:
         scr.sfc.blit(self.sfc,self.rct)
 
 def main():
-    global deck
+    total1=0
+    total2=0
     clock=pg.time.Clock()
     scr=Screen("black Jack",(1600,900),"./ex06/トランプ/CC.jpg!d")
-    deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] * 4
-    gara = ["CL","HT","SP","DI"]
-    dealer_hand = deal()
-    player_hand = deal()
-    dealer_kigo = kigo()
-    player_kigo = kigo()
+    dealer_kigo,dealer_hand = deal()
+    player_kigo,player_hand = deal()
+    total1+=total(player_hand[0])+total(player_hand[1])
+    total2+=total(dealer_hand[0])+total(dealer_hand[1])
     ur=ura("ex06/トランプ/card_back.png")
     print(player_kigo)
     kkt1=huda(player_hand,player_kigo,'P')
     kkt2=huda(dealer_hand,dealer_kigo,'D')
+    count=0
+    com=0
     m=0
+    pk=0
+    kkx=kkt1.rct2.centerx
+    kkt=[]
+    x1=kkt1.rct1.centerx
     while True:
         scr.blit()
         ur.blit(scr)
@@ -80,61 +105,78 @@ def main():
                 return
             if event.type==pg.KEYDOWN and event.key==pg.K_SPACE:
                 m=1
+            elif event.type==pg.KEYDOWN and event.key==pg.K_1:
+                pk,ph=deal2()
+                com+=1
+                count=com
+                total1+=total(ph[0])
+                if count>=2:
+                    count=2
         if m==1:
             kkt1.update(scr)
             kkt2.update(scr)
-        
+        if count>=1:
+            kkt1.rct1.centerx-=10
+            kkt1.rct2.centerx-=10
+            if kkt1.rct1.centerx<=x1-75/2:
+                kkt1.rct1.centerx=kkt1.rct1.centerx-75/2
+                kkt1.rct2.centerx=kkt1.rct1.centerx+150
+                kkt.append(tuika(ph,pk,kkx,count))
+                for j in kkt:
+                    kkx=j.rct.centerx
+                    while True:
+                        j.rct.centerx-=10
+                        if j.rct.centerx<=kkx-75:
+                            break
+                x1=kkt1.rct1.centerx
+                count=0
+                if total1>21:
+                    pk=1
+        for i in kkt:
+            i.update(scr)
         pg.display.update()
         clock.tick(1000)
+        if pk==1:
+            root = tk.Tk()
+            root.withdraw()
+            tkm.showinfo("game over","もう一度やりますか？")
+            return
 
-
-
-
-def kigo():
-    go=[]
-    for i in range(2):
-        random.shuffle(gara)
-        k=gara.pop(0)
-        go.append(k)
-    return go
 
 def deal():
+    global gara,jisyo
     hand = []
+    kis=[]
     for i in range(2):
-        random.shuffle(deck)
-        card = deck.pop()
+        m=random.randint(0,3)
+        ki=gara[m]
+        ho=jisyo[ki]
+        random.shuffle(ho)
+        card = ho.pop()
+        jisyo.update({ki:ho})
+        kis.append(ki)
         hand.append(card)
-    return hand
+    return kis,hand
 
-
-
-
-def hit(hand):
-    random.shuffle(deck)
-    card = deck.pop()
-    if card == 11:
-        card = "J"
-    if card == 12:
-        card = "Q"
-    if card == 13:
-        card = "K"
-    if card == 1:
-        card = "A"
+def deal2():
+    global gara,jisyo
+    hand = []
+    kis=[]
+    m=random.randint(0,3)
+    ki=gara[m]
+    ho=jisyo[ki]
+    random.shuffle(ho)
+    card = ho.pop()
+    jisyo.update({ki:ho})
+    kis.append(ki)
     hand.append(card)
-    return hand
+    return kis,hand
 
 def total(hand):
-    score = 0
-    for card in hand:
-        if card == "J" or card == "Q" or card == "K":
-            score = score + 10
-        elif card == "A":
-            if score >= 11:
-                score = score + 1
-            else:
-                score += 11
-        else:
-            score += card
+    if hand >= 10:
+        score = 10
+    else:
+        score=hand
     return score
 
 def play_again():
@@ -153,7 +195,7 @@ def result(dealer_hand, player_hand):
     elif total(dealer_hand) > total(player_hand):
         print(
             f"\nディーラーの合計は {total(dealer_hand)} あなたの合計は {total(player_hand)} です。\033[91mYOU LOSE...\033[0m")
-
+"""
 def game():
     dealer_hand = deal()
     player_hand = deal()
@@ -186,7 +228,7 @@ def game():
             if total(dealer_hand) <= 21:
                 result(dealer_hand, player_hand)
                 choice = quit
-
+"""
 
 if __name__=="__main__":
     pg.init()
