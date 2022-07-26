@@ -63,11 +63,11 @@ class Fuda:
 
 
 class Tuika:
-    def __init__(self,hand,label,x,count):
+    def __init__(self,hand,label,x,player_hit_count):
         self.sfc = pg.image.load(f"./ProjExD/ex06/トランプ/{label[0]}/{hand[0]}_{label[0]}.png")
         self.sfc = pg.transform.rotozoom(self.sfc, 0, 0.15)
         self.rct = self.sfc.get_rect()
-        if count == 1:
+        if player_hit_count == 1:
             mod = x + 160
         else:
             mod = x + 75
@@ -163,25 +163,24 @@ def main():
     hit_s = Hit_s("./ProjExD/ex06/トランプ/hit.png", 0.3, (1400,600))
     std_s = Stand_s("./ProjExD/ex06/トランプ/stand.png", 0.3, (1400,750))
     play_s= Stand_s("./ProjExd/ex06/トランプ/play.png",0.3,(1400,450))
-    bak = Ura(875,100)
+    BAK = Ura(875,100)
     score = Score(60, (0 ,0 , 0), (200, 100), pw)
     dealer_kigo,dealer_hand = deal()
     player_kigo,player_hand = deal()
-    total1 = total(player_hand[0])+total(player_hand[1])
-    total2 = total(dealer_hand[0])+total(dealer_hand[1])
+    player_total = total(player_hand[0])+total(player_hand[1])
+    dealer_total = total(dealer_hand[0])+total(dealer_hand[1])
     ur = Ura(1400,450)
     print(player_kigo)
-    kkt1 = Fuda(player_hand,player_kigo,'P')
-    kkt2 = Fuda(dealer_hand,dealer_kigo,'D')
-    count = 0
+    player_CL = Fuda(player_hand,player_kigo,'P')
+    dealer_CL = Fuda(dealer_hand,dealer_kigo,'D')
+    player_hit_count = 0
     countd = 0
-    com = 0
     m = 0
     kb = 1
     j = 0
-    kkx = kkt1.rct2.centerx
-    kkt = []
-    x1 = kkt1.rct1.centerx
+    posi_x = player_CL.rct2.centerx
+    hit_list = []
+    x1 = player_CL.rct1.centerx
     kktd = []
     key_type = False
 
@@ -205,55 +204,54 @@ def main():
                 if hit_s.rct.collidepoint(event.pos):
                     se_card_open()
                     ga,ph = deal2()
-                    com += 1
-                    count = com
-                    total1 += total(ph[0])
-                    if count >= 2:
-                        count = 2
+                    player_hit_count += 1
+                    player_total += total(ph[0])
+                    if player_hit_count >= 2:
+                        player_hit_count = 2
                 if std_s.rct.collidepoint(event.pos):
                     se_card_open()
                     kb = 0
-                    while (total2 < 17):
+                    while (dealer_total < 17):
                         gad,phd = deal2()
                         countd += 1
-                        total2 += total(phd[0])
-                        kkt2.rct1.centerx -= 100
-                        kkt2.rct2.centerx -= 100
+                        dealer_total += total(phd[0])
+                        dealer_CL.rct1.centerx -= 100
+                        dealer_CL.rct2.centerx -= 100
                         kktd.append(Tuika_d(phd,gad,1000))
                         for j in kktd:
                             while True:
                                 j.rct.centerx -= 10
-                                if j.rct.centerx <= kkx - 75:
+                                if j.rct.centerx <= posi_x - 75:
                                     break
-                        count = 0
+                        player_hit_count = 0
                     j = 1
             
                
         if m == 1:
-            kkt1.update(scr)
-            kkt2.update(scr)
-            mytotal = Mytotal(40, (0 ,0 , 0), (200, 700), total1)
+            player_CL.update(scr)
+            dealer_CL.update(scr)
+            mytotal = Mytotal(40, (0 ,0 , 0), (200, 700), player_total)
             mytotal.blit(scr)
-            dltotal = Mytotal(40, (0 ,0 , 0), (200, 400), total2)
+            dltotal = Mytotal(40, (0 ,0 , 0), (200, 400), dealer_total)
             dltotal.blit(scr)
         if kb:
-            bak.blit(scr)
-        if count>=1:
-            kkt1.rct1.centerx -= 10
-            kkt1.rct2.centerx -= 10
-            if kkt1.rct1.centerx<=x1-75/2:
-                kkt1.rct1.centerx = kkt1.rct1.centerx - 75/2
-                kkt1.rct2.centerx = kkt1.rct1.centerx + 150
-                kkt.append(Tuika(ph,ga,kkx,count))
-                for j in kkt:
-                    kkx = j.rct.centerx
+            BAK.blit(scr)
+        if player_hit_count >= 1:
+            player_CL.rct1.centerx -= 10
+            player_CL.rct2.centerx -= 10
+            if player_CL.rct1.centerx<=x1-75/2:
+                player_CL.rct1.centerx = player_CL.rct1.centerx - 75/2
+                player_CL.rct2.centerx = player_CL.rct1.centerx + 150
+                hit_list.append(Tuika(ph,ga,posi_x,player_hit_count))
+                for j in hit_list:
+                    posi_x = j.rct.centerx
                     while True:
                         j.rct.centerx -= 10
-                        if j.rct.centerx <= kkx - 75:
+                        if j.rct.centerx <= posi_x - 75:
                             break
-                x1 = kkt1.rct1.centerx
-                count = 0
-        for i in kkt:
+                x1 = player_CL.rct1.centerx
+                player_hit_count = 0
+        for i in hit_list:
             i.update(scr)
         for i in kktd:
             i.update(scr)
@@ -261,7 +259,7 @@ def main():
         clock.tick(1000)
 
         if j == 1:
-            judge(total1, total2)
+            judge(player_total, dealer_total)
         if pw == 5 or dw == 5:
             tkm.showinfo("game over","ゲームを終了します")
             pg.quit()
@@ -297,31 +295,6 @@ def deal2():
     hand.append(card)
     return kis,hand
 
-def dealer_turn(s, kkt2):
-    global kb
-    kb = 0
-    count = 0
-    kkt = []
-    kkx = kkt2.rct2.centerx
-    if s < 17:
-        ga,ph = deal2()
-        count += 1
-        s += total(ph[0])
-    if count>=1:
-            kkt2.rct1.centerx -= 10
-            kkt2.rct2.centerx -= 10
-            if kkt2.rct1.centerx <= x1 - 75 / 2:
-                kkt2.rct1.centerx = kkt2.rct1.centerx-75/2
-                kkt2.rct2.centerx = kkt2.rct1.centerx+150
-                kkt.append(Tuika(ph,ga,kkx,count))
-                for j in kkt:
-                    kkx = j.rct.centerx
-                    while True:
-                        j.rct.centerx -= 10
-                        if j.rct.centerx <= kkx - 75:
-                            break
-                x1 = kkt2.rct1.centerx
-                count = 0
 
 def judge(n1, n2):
     global pw, dw
@@ -344,22 +317,6 @@ def total(hand):
         score = hand
     return score
 
-def play_again():
-    again = input("もう１度プレイしますか？ (Y/N): ")
-    if again == "y" or again == "Y":
-        # game()
-        return
-    else:
-        print("お疲れ様でした！")
-        exit()
-
-def result(dealer_hand, player_hand):
-    if total(player_hand) > total(dealer_hand):
-        print(
-            f"\nディーラーの合計は {total(dealer_hand)} あなたの合計は {total(player_hand)} です。\033[32mYOU WIN!\033[0m")
-    elif total(dealer_hand) > total(player_hand):
-        print(
-            f"\nディーラーの合計は {total(dealer_hand)} あなたの合計は {total(player_hand)} です。\033[91mYOU LOSE...\033[0m")
 
 if __name__=="__main__":
     pg.init()
