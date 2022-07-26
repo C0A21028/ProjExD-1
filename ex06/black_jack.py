@@ -277,7 +277,6 @@ def main():
             sys.exit()
 
 
-
 def deal():
     global gara,jisyo
     hand = []
