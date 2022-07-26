@@ -1,4 +1,5 @@
 from os import scandir
+
 import random
 from re import S
 import tkinter.messagebox as tkm
@@ -16,14 +17,14 @@ pw = 0
 dw = 0
 
 def bgm():
-    bgm_file = "./ProjExD/Ex06/fig/bgm.wav"
+    bgm_file = "./ProjExD/ex06/fig/bgm.wav"
     sounds = pg.mixer.Sound(bgm_file)
     sounds.play(loops = -1)
     pg.mixer.music.set_volume(0.6)
 
 
 def se_card_open():
-    bgm_file = "./ProjExD/Ex06/fig/card_open.mp3"
+    bgm_file = "./ProjExD/ex06/fig/card_open.mp3"
     sounds = pg.mixer.Sound(bgm_file)
     sounds.play(1)
 
@@ -113,16 +114,14 @@ class Stand_s:
         scr.sfc.blit(self.sfc, self.rct)
 
 
-class Back:
-    def __init__(self, image, size, xy):
-        self.sfc = pg.image.load(image)  
-        self.sfc = pg.transform.rotozoom(self.sfc, 0, size)  
-        self.rct = self.sfc.get_rect()  
-        self.rct.center = xy
-
-
-    def blit(self, scr: Screen):
-        scr.sfc.blit(self.sfc, self.rct)
+class ura:
+    def __init__(self,x,y):
+        self.sfc=pg.image.load("./ProjExD/ex06/トランプ/card_back.png")
+        self.sfc=pg.transform.rotozoom(self.sfc, 0, 0.4)
+        self.rct=self.sfc.get_rect()
+        self.rct.center=(x,y)
+    def blit(self,scr:Screen):
+        scr.sfc.blit(self.sfc,self.rct)
 
 
 class Deck:
@@ -164,13 +163,14 @@ def main():
     scr=Screen("black Jack",(1600,900),"./ProjExD/ex06/トランプ/bg.jpg")
     hit_s = Hit_s("./ProjExD/ex06/トランプ/hit.png", 0.3, (1400,600))
     std_s = Stand_s("./ProjExD/ex06/トランプ/stand.png", 0.3, (1400,750))
-    bak = Back("./ProjExD/ex06/トランプ/back.png", 0.4, (875,100))
+    play_s= Stand_s("./ProjExd/ex06/トランプ/play.png",0.3,(1400,450))
+    bak = ura(875,100)
     score = Score(60, (0 ,0 , 0), (200, 100), pw)
     dealer_kigo,dealer_hand = deal()
     player_kigo,player_hand = deal()
     total1=total(player_hand[0])+total(player_hand[1])
     total2=total(dealer_hand[0])+total(dealer_hand[1])
-    ur=Deck("./ProjExD/ex06/トランプ/back.png")
+    ur=ura(1400,450)
     print(player_kigo)
     kkt1=huda(player_hand,player_kigo,'P')
     kkt2=huda(dealer_hand,dealer_kigo,'D')
@@ -186,18 +186,25 @@ def main():
     x1=kkt1.rct1.centerx
     kkxd =kkt2.rct2.centerx
     kktd = []
-
+    key_type=False
 
     while True:
         scr.blit()
-        hit_s.blit(scr)
-        std_s.blit(scr)
-        ur.blit(scr)
+        if key_type==True:
+            hit_s.blit(scr)
+            std_s.blit(scr)
+            ur.blit(scr)
+            m=1
+        else:
+            play_s.blit(scr)
         for event in pg.event.get():
             if event.type==pg.QUIT:
                 pg.quit()
                 sys.exit()
             if event.type == pg.MOUSEBUTTONDOWN:
+                if play_s.rct.collidepoint(event.pos):
+                    key_type=True
+                    kb=True
                 if hit_s.rct.collidepoint(event.pos):
                     se_card_open()
                     ga,ph=deal2()
@@ -227,9 +234,7 @@ def main():
                         if total2>21:
                             pk=1
                     j = 1
-            if event.type==pg.KEYDOWN and event.key==pg.K_SPACE:
-                se_card_open()
-                m=1
+            
                
         if m==1:
             kkt1.update(scr)
